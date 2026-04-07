@@ -196,10 +196,26 @@
  { word: 'Boat', emoji: '🚤' },
  { word: 'Bike', emoji: '🚲' },
  { word: 'Truck', emoji: '🚛' },
- { word: 'Helicopter', emoji: '🚁' }
- ]
- }
- ];
+{ word: 'Helicopter', emoji: '🚁' }
+	]
+},
+{
+	id: 'structures',
+	name: 'Structures',
+	emoji: '🏠',
+	color: '#8B4513',
+	words: [
+	{ word: 'House', emoji: '🏠' },
+	{ word: 'School', emoji: '🏫' },
+	{ word: 'Hospital', emoji: '🏥' },
+	{ word: 'Museum', emoji: '🏛️' },
+	{ word: 'Bridge', emoji: '🌉' },
+	{ word: 'Church', emoji: '⛪' },
+	{ word: 'Castle', emoji: '🏰' },
+	{ word: 'Tower', emoji: '🗼' }
+	]
+}
+];
  
  let synth = null;
  let voices = [];
@@ -677,16 +693,270 @@ Seven, eight, lay them straight;
 Nine, ten, a big fat hen!`,
  illustration: '👟🚪🪵🐔'
  }
- ];
- 
- let currentRhyme = $state(null);
- let rhymeIndex = $state(0);
- 
- function openReading() {
- currentRhyme = nurseryRhymes[0];
- rhymeIndex = 0;
- currentView = 'reading';
- }
+];
+
+// Baby Aesop Fables from Project Gutenberg #25433
+const aesopFables = [
+{
+id: 'fox-grapes',
+title: 'The Fox and the Grapes',
+emoji: '🦊',
+text: `This Fox has a longing for grapes,
+He jumps, but the bunch still escapes.
+So he goes away sour;
+And, 'tis said, to this hour
+Declares that he's no taste for grapes.`,
+moral: 'The grapes of disappointment are always sour.',
+illustration: '🦊🍇'
+},
+{
+id: 'cock-pearl',
+title: 'The Cock and the Pearl',
+emoji: '🐓',
+text: `A rooster, while scratching for grain,
+Found a Pearl. He just paused to explain
+That a jewel's no good
+To a fowl wanting food,
+And then kicked it aside with disdain.`,
+moral: 'If he ask bread will ye give him a stone?',
+illustration: '🐓💎'
+},
+{
+id: 'wolf-lamb',
+title: 'The Wolf and the Lamb',
+emoji: '🐺',
+text: `A wolf, wanting lamb for his dinner,
+Growled out—"Lamb you wronged me, you sinner."
+Bleated Lamb—"Nay, not true!"
+Answered Wolf—"Then 'twas Ewe—
+Ewe or lamb, you will serve for my dinner."`,
+moral: 'Fraud and violence have no scruples.',
+illustration: '🐺🐑'
+},
+{
+id: 'wind-sun',
+title: 'The Wind and the Sun',
+emoji: '🌬️',
+text: `The Wind and the Sun had a bet,
+The wayfarers' cloak which should get:
+Blew the Wind—the cloak clung:
+Shone the Sun—the cloak flung
+Showed the Sun had the best of it yet.`,
+moral: 'True strength is not bluster.',
+illustration: '🌬️☀️'
+},
+{
+id: 'king-log-stork',
+title: 'King Log and King Stork',
+emoji: '👑',
+text: `The Frogs prayed to Jove for a king:
+"Not a log, but a livelier thing."
+Jove sent them a Stork,
+Who did royal work,
+For he gobbled them up, did their king.`,
+moral: "Don't have kings.",
+illustration: '🐸👑🦢'
+},
+{
+id: 'frightened-lion',
+title: 'The Frightened Lion',
+emoji: '🦁',
+text: `A Bull Frog, according to rule,
+Sat a-croak in his usual pool:
+And he laughed in his heart
+As a Lion did start
+In a fright from the brink like a fool.`,
+moral: 'Imaginary fears are the worst.',
+illustration: '🐸🦁'
+},
+{
+id: 'mouse-lion',
+title: 'The Mouse and the Lion',
+emoji: '🐭',
+text: `A Lion caught a Mouse in his paw,
+"I'll eat you," he said with a roar.
+But the Mouse made him smile—
+Let him go with a wile,
+And later saved Lion, and what's more.`,
+moral: 'A kindness is never thrown away.',
+illustration: '🐭🦁'
+},
+{
+id: 'lazy-housemaids',
+title: 'The Lazy Housemaids',
+emoji: '🧹',
+text: `Two maids, with a broom and a pail,
+Left work for the cat to trail.
+But the cat, poor thing,
+Did no scrubbing or cleaning,
+And the dust grew thicker than hail.`,
+moral: 'Work is not to be left undone.',
+illustration: '👩🧹🐱'
+},
+{
+id: 'fox-crow',
+title: 'The Fox and the Crow',
+emoji: '🦊',
+text: `A Crow with a cheese in her beak,
+Was praised by a Fox, oh so sleek.
+"Crow, sing for me now!"
+She opened her beak—
+Down fell cheese, Fox smiled so weak.`,
+moral: 'Flatterers are not to be trusted.',
+illustration: '🦊🐦🧀'
+},
+{
+id: 'dog-manger',
+title: 'The Dog in the Manger',
+emoji: '🐕',
+text: `A Dog in a manger did lie,
+Who neither did eat, nor let eat.
+The oxen came by,
+But he barked at each try,
+And would not let them have a seat.`,
+moral: "Don't begrudge others what you cannot enjoy.",
+illustration: '🐕🐴🌾'
+},
+{
+id: 'frog-bull',
+title: 'The Frog and the Bull',
+emoji: '🐸',
+text: `A Frog saw an Ox at a pool,
+And said—"I am bigger, you fool!"
+She puffed out her skin,
+Till she burst at the chin,
+And died trying to look very cool.`,
+moral: 'Pride goes before a fall.',
+illustration: '🐸🐂'
+},
+{
+id: 'fox-crane',
+title: 'The Fox and the Crane',
+emoji: '🦊',
+text: `Fox asked Crane to dinner one day,
+Served soup on a plate, in a way
+That Crane could not sup.
+Next day Crane took a cup,
+And Fox went hungry away.`,
+moral: 'One bad turn deserves another.',
+illustration: '🦊🦢'
+},
+{
+id: 'miser-gold',
+title: 'The Miser and His Gold',
+emoji: '💰',
+text: `A Miser his gold in the ground,
+Buried and checked it all round.
+A thief stole the prize,
+While he covered his eyes—
+He lost what could not be found.`,
+moral: 'Wealth unused is wealth unknown.',
+illustration: '💰💀'
+},
+{
+id: 'golden-eggs',
+title: 'The Golden Eggs',
+emoji: '🥚',
+text: `A Farmer had a Goose so grand,
+Who laid an egg of gold each day.
+He killed her to find more in hand,
+But found just guts—and threw away.`,
+moral: 'Greed loses all.',
+illustration: '🦢🥚✨'
+},
+{
+id: 'hare-tortoise',
+title: 'The Hare and the Tortoise',
+emoji: '🐢',
+text: `A Hare and Tortoise ran a race,
+The Hare napped at his leisure pace.
+The Tortoise plodded on,
+And when the race was done,
+He won through steady grace.`,
+moral: 'Slow and steady wins the race.',
+illustration: '🐇🐢🏆'
+},
+{
+id: 'bundle-sticks',
+title: 'The Bundle of Sticks',
+emoji: '🪵',
+text: `A Father had sons who would fight,
+He gave them a bundle so tight.
+"Break it," said he,
+But singly, you'll see,
+Each stick breaks with all his might.`,
+moral: 'Union is strength.',
+illustration: '👴👦🪵'
+},
+{
+id: 'dog-shadow',
+title: 'The Dog and the Shadow',
+emoji: '🐕',
+text: `A Dog with a piece of meat spied,
+His shadow in water so wide.
+He snapped at the face,
+And dropped in his place,
+The meat—and stood hungry and dried.`,
+moral: 'It is very easy to lose what we have.',
+illustration: '🐕🥩🌊'
+},
+{
+id: 'crow-pitcher',
+title: 'The Crow and the Pitcher',
+emoji: '🐦',
+text: `A thirsty Crow found a pitcher,
+But water was low—he couldn't get her.
+He dropped pebbles in,
+And the water did rise,
+Then drank his fill, no more to wither.`,
+moral: "Where there's a will, there's a way.",
+illustration: '🐦🫗💧'
+},
+{
+id: 'lion-mouse-debt',
+title: 'The Lion and the Mouse',
+emoji: '🦁',
+text: `A Lion let a Mouse go free,
+Who promised to help—small as he.
+Later trapped in a net,
+The Mouse paid the debt,
+And set the great Lion free.`,
+moral: 'Little friends may prove great friends.',
+illustration: '🦁🐭✂️'
+},
+{
+id: 'peacock-complaint',
+title: "The Peacock's Complaint",
+emoji: '🦚',
+text: `A Peacock complained to the Juno,
+"The Nightingale sings—you know!
+While I have no voice."
+Juno said, "Make your choice—
+Your beauty or song—you must choose."`,
+moral: 'Be content with what you have.',
+illustration: '🦚🎵'
+}
+];
+
+let currentRhyme = $state(null);
+let rhymeIndex = $state(0);
+let currentFable = $state(null);
+let fableIndex = $state(0);
+let readingType = $state('nursery'); // 'nursery' or 'aesop'
+
+function openReading() {
+currentRhyme = nurseryRhymes[0];
+rhymeIndex = 0;
+readingType = 'nursery';
+currentView = 'reading';
+}
+
+function openAesop() {
+currentFable = aesopFables[0];
+fableIndex = 0;
+readingType = 'aesop';
+currentView = 'reading';
+}
  
  function nextRhyme() {
  if (rhymeIndex < nurseryRhymes.length - 1) {
@@ -702,12 +972,43 @@ Nine, ten, a big fat hen!`,
  }
  }
  
- function selectRhyme(idx) {
- rhymeIndex = idx;
- currentRhyme = nurseryRhymes[idx];
- }
- 
- function nextTraceWord() {
+function selectRhyme(idx) {
+rhymeIndex = idx;
+currentRhyme = nurseryRhymes[idx];
+}
+
+function nextFable() {
+if (fableIndex < aesopFables.length - 1) {
+fableIndex++;
+currentFable = aesopFables[fableIndex];
+}
+}
+
+function prevFable() {
+if (fableIndex > 0) {
+fableIndex--;
+currentFable = aesopFables[fableIndex];
+}
+}
+
+function selectFable(idx) {
+fableIndex = idx;
+currentFable = aesopFables[idx];
+}
+
+function speakFable() {
+if (currentFable && synth) {
+synth.cancel();
+const utterance = new SpeechSynthesisUtterance(currentFable.text + '. ' + currentFable.moral);
+utterance.lang = 'en-US';
+utterance.rate = 0.85;
+const voice = voices.find(v => v.lang.includes('en'));
+if (voice) utterance.voice = voice;
+synth.speak(utterance);
+}
+}
+
+function nextTraceWord() {
  const idx = currentCategory.words.findIndex(w => w.word === traceWord.word);
  if (idx < currentCategory.words.length - 1) {
  traceWord = currentCategory.words[idx + 1];
@@ -766,14 +1067,19 @@ Nine, ten, a big fat hen!`,
  {/each}
  </div>
  
- <div class="reading-section">
- <button class="reading-btn" onclick={openReading}>
- <span class="reading-emoji">📖</span>
- <span class="reading-title">Reading</span>
- <span class="reading-subtitle">Nursery Rhymes</span>
- </button>
- </div>
- </section>
+<div class="reading-section">
+<button class="reading-btn" onclick={openReading}>
+<span class="reading-emoji">📖</span>
+<span class="reading-title">Reading</span>
+<span class="reading-subtitle">Nursery Rhymes</span>
+</button>
+<button class="reading-btn aesop-btn" onclick={openAesop}>
+<span class="reading-emoji">🦊</span>
+<span class="reading-title">Baby Aesop</span>
+<span class="reading-subtitle">Moral Fables</span>
+</button>
+</div>
+</section>
  
  {:else if currentView === 'flashcards'}
  <section class="flashcards">
@@ -919,49 +1225,93 @@ Nine, ten, a big fat hen!`,
  </div>
  </section>
  
- {:else if currentView === 'reading'}
- <section class="reading-view">
- <button class="back-btn" onclick={goHome}>← Back</button>
- 
- <div class="rhyme-nav">
- <button class="nav-btn" onclick={prevRhyme} disabled={rhymeIndex === 0}>◀</button>
- <div class="rhyme-counter">{rhymeIndex + 1} / {nurseryRhymes.length}</div>
- <button class="nav-btn" onclick={nextRhyme} disabled={rhymeIndex === nurseryRhymes.length - 1}>▶</button>
- </div>
- 
- <div class="rhyme-card">
- <div class="rhyme-header">
- <span class="rhyme-emoji">{currentRhyme.emoji}</span>
- <h2>{currentRhyme.title}</h2>
- </div>
- 
- <div class="rhyme-illustration">{currentRhyme.illustration}</div>
- 
- <div class="rhyme-text">
- {#each currentRhyme.text.split('\n') as line}
- <p>{line}</p>
- {/each}
- </div>
- 
- <div class="rhyme-actions">
- <button class="action-btn speak-btn" onclick={() => speak(currentRhyme.text)}>
- 🔊 Read Aloud
- </button>
- </div>
- </div>
- 
- <div class="rhyme-list">
- {#each nurseryRhymes as rhyme, idx}
- <button 
- class="rhyme-thumb {idx === rhymeIndex ? 'active' : ''}"
- onclick={() => selectRhyme(idx)}>
- <span class="thumb-emoji">{rhyme.emoji}</span>
- <span class="thumb-title">{rhyme.title}</span>
- </button>
- {/each}
- </div>
- </section>
- {/if}
+{:else if currentView === 'reading'}
+<section class="reading-view">
+<button class="back-btn" onclick={goHome}>← Back</button>
+
+{#if readingType === 'nursery'}
+<div class="rhyme-nav">
+<button class="nav-btn" onclick={prevRhyme} disabled={rhymeIndex === 0}>◀</button>
+<div class="rhyme-counter">{rhymeIndex + 1} / {nurseryRhymes.length}</div>
+<button class="nav-btn" onclick={nextRhyme} disabled={rhymeIndex === nurseryRhymes.length - 1}>▶</button>
+</div>
+
+<div class="rhyme-card">
+<div class="rhyme-header">
+<span class="rhyme-emoji">{currentRhyme.emoji}</span>
+<h2>{currentRhyme.title}</h2>
+</div>
+
+<div class="rhyme-illustration">{currentRhyme.illustration}</div>
+
+<div class="rhyme-text">
+{#each currentRhyme.text.split('\n') as line}
+<p>{line}</p>
+{/each}
+</div>
+
+<div class="rhyme-actions">
+<button class="action-btn speak-btn" onclick={() => speak(currentRhyme.text)}>
+🔊 Read Aloud
+</button>
+</div>
+</div>
+
+<div class="rhyme-list">
+{#each nurseryRhymes as rhyme, idx}
+<button 
+class="rhyme-thumb {idx === rhymeIndex ? 'active' : ''}"
+onclick={() => selectRhyme(idx)}>
+<span class="thumb-emoji">{rhyme.emoji}</span>
+<span class="thumb-title">{rhyme.title}</span>
+</button>
+{/each}
+</div>
+{:else if readingType === 'aesop'}
+<div class="rhyme-nav">
+<button class="nav-btn" onclick={prevFable} disabled={fableIndex === 0}>◀</button>
+<div class="rhyme-counter">{fableIndex + 1} / {aesopFables.length}</div>
+<button class="nav-btn" onclick={nextFable} disabled={fableIndex === aesopFables.length - 1}>▶</button>
+</div>
+
+<div class="rhyme-card fable-card">
+<div class="rhyme-header">
+<span class="rhyme-emoji">{currentFable.emoji}</span>
+<h2>{currentFable.title}</h2>
+</div>
+
+<div class="rhyme-illustration">{currentFable.illustration}</div>
+
+<div class="rhyme-text">
+{#each currentFable.text.split('\n') as line}
+<p>{line}</p>
+{/each}
+</div>
+
+<div class="fable-moral">
+<strong>Moral:</strong> {currentFable.moral}
+</div>
+
+<div class="rhyme-actions">
+<button class="action-btn speak-btn" onclick={speakFable}>
+🔊 Read Aloud
+</button>
+</div>
+</div>
+
+<div class="rhyme-list">
+{#each aesopFables as fable, idx}
+<button 
+class="rhyme-thumb {idx === fableIndex ? 'active' : ''}"
+onclick={() => selectFable(idx)}>
+<span class="thumb-emoji">{fable.emoji}</span>
+<span class="thumb-title">{fable.title}</span>
+</button>
+{/each}
+</div>
+{/if}
+</section>
+{/if}
  
  <footer>
  <p>Volta Kids - Learning is fun! 🌟</p>
@@ -1621,27 +1971,31 @@ Nine, ten, a big fat hen!`,
  justify-content: center;
  }
  
- .reading-btn {
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 0.5rem;
- padding: 2rem 3rem;
- background: linear-gradient(135deg, #FF6B6B, #FFA07A);
- border: none;
- border-radius: 25px;
- cursor: pointer;
- box-shadow: 0 8px 25px rgba(0,0,0,0.3);
- transition: transform 0.2s, box-shadow 0.2s;
- font-family: inherit;
- }
- 
- .reading-btn:hover {
- transform: translateY(-5px) scale(1.02);
- box-shadow: 0 12px 35px rgba(0,0,0,0.4);
- }
- 
- .reading-emoji {
+.reading-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+padding: 2rem 3rem;
+background: linear-gradient(135deg, #FF6B6B, #FFA07A);
+border: none;
+border-radius: 25px;
+cursor: pointer;
+box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+transition: transform 0.2s, box-shadow 0.2s;
+font-family: inherit;
+}
+
+.reading-btn:hover {
+transform: translateY(-5px) scale(1.02);
+box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+}
+
+.aesop-btn {
+background: linear-gradient(135deg, #2ECC71, #27AE60);
+}
+
+.reading-emoji {
  font-size: 4rem;
  }
  
@@ -1774,10 +2128,28 @@ Nine, ten, a big fat hen!`,
  font-size: 1.5rem;
  }
  
- .thumb-title {
- font-size: 0.75rem;
- color: #666;
- font-weight: bold;
- white-space: nowrap;
- }
+.thumb-title {
+font-size: 0.75rem;
+color: #666;
+font-weight: bold;
+white-space: nowrap;
+}
+
+.fable-card {
+background: linear-gradient(135deg, #2ECC71, #27AE60);
+}
+
+.fable-moral {
+margin-top: 1.5rem;
+padding: 1rem 1.5rem;
+background: rgba(255,255,255,0.2);
+border-radius: 15px;
+font-size: 1.1rem;
+color: white;
+text-align: center;
+}
+
+.fable-moral strong {
+color: #FFE66D;
+}
 </style>
