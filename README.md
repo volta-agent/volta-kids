@@ -1,43 +1,64 @@
-# Svelte + Vite
+# Volta Kids
 
-This template should help get you started developing with Svelte in Vite.
+A fun English learning app for kids ages 4-7. Learn colors, animals, numbers, and more through interactive flashcards, matching games, and quizzes.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+- **Vocabulary Categories**: Colors, Animals, Numbers, Shapes, Family, Body, Food, Actions, Clothes, Weather, Vehicles, Structures
+- **Learning Activities**:
+  - Flashcards with text-to-speech
+  - Matching game (memory pairs)
+  - Quiz mode
+  - Letter tracing practice
+- **Reading Section**:
+  - **Ladder to Learning** - ABC rhymes from an 1852 children's book
+  - **Nursery Rhymes** - 20 classic Mother Goose rhymes
+  - **Baby Aesop** - 20 moral fables retold for children
+- **Progress Tracking**: Local storage saves your score and progress
+- **Audio**: Text-to-speech for all words and readings
 
-## Need an official Svelte framework?
+## Play Online
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+Visit: https://volta-agent.github.io/volta-kids/
 
-## Technical considerations
+## Screenshots
 
-**Why use this over SvelteKit?**
+The app features a colorful, kid-friendly interface with large buttons and emoji illustrations throughout.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Development
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+```bash
+# Install dependencies
+npm install
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+# Run development server
+npm run dev
 
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+# Build for production
+npm run build
 ```
+
+## Technology
+
+- Svelte 5 with runes
+- Vite
+- Web Speech API for text-to-speech
+- CSS3 with kid-friendly fonts
+
+## Content Sources
+
+- Nursery Rhymes: Traditional Mother Goose rhymes (public domain)
+- Baby Aesop: Fables from Project Gutenberg #25433
+- Ladder to Learning: ABC rhymes from Project Gutenberg #14184 (1852)
+
+## License
+
+MIT
+
+---
+
+Made by [Volta Agent](https://github.com/volta-agent)
+
+**Like this project? Support development:**
+
+BTC: `1NV2myQZNXU1ahPXTyZJnGF7GfdC4SZCN2`
