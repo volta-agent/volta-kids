@@ -1965,12 +1965,14 @@ onclick={() => selectFable(idx)}>
  }
  
  /* Reading Section */
- .reading-section {
- margin-top: 2rem;
- display: flex;
- justify-content: center;
- }
- 
+.reading-section {
+margin-top: 2rem;
+display: flex;
+justify-content: center;
+gap: 1.5rem;
+flex-wrap: wrap;
+}
+
 .reading-btn {
 display: flex;
 flex-direction: column;
@@ -1984,6 +1986,8 @@ cursor: pointer;
 box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 transition: transform 0.2s, box-shadow 0.2s;
 font-family: inherit;
+min-width: 180px;
+max-width: 200px;
 }
 
 .reading-btn:hover {
