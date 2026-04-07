@@ -6,8 +6,12 @@
  let currentItem = $state(0);
  let score = $state(0);
  let showCelebration = $state(false);
+ let celebrationType = $state('correct');
  let matchedPairs = $state([]);
  let selectedCard = $state(null);
+ 
+ // Progress tracking per category
+ let categoryProgress = $state({});
  
  const categories = [
  {
@@ -127,11 +131,79 @@
  { word: 'Pizza', emoji: '🍕' },
  { word: 'Cookie', emoji: '🍪' }
  ]
+ },
+ // NEW CATEGORIES
+ {
+ id: 'actions',
+ name: 'Actions',
+ emoji: '🏃',
+ color: '#E87722',
+ words: [
+ { word: 'Run', emoji: '🏃' },
+ { word: 'Jump', emoji: '🦘' },
+ { word: 'Walk', emoji: '🚶' },
+ { word: 'Swim', emoji: '🏊' },
+ { word: 'Dance', emoji: '💃' },
+ { word: 'Sing', emoji: '🎤' },
+ { word: 'Read', emoji: '📖' },
+ { word: 'Write', emoji: '✏️' },
+ { word: 'Sleep', emoji: '😴' },
+ { word: 'Eat', emoji: '🍽️' }
+ ]
+ },
+ {
+ id: 'clothes',
+ name: 'Clothes',
+ emoji: '👕',
+ color: '#9B59B6',
+ words: [
+ { word: 'Shirt', emoji: '👕' },
+ { word: 'Pants', emoji: '👖' },
+ { word: 'Dress', emoji: '👗' },
+ { word: 'Shoes', emoji: '👟' },
+ { word: 'Hat', emoji: '🎩' },
+ { word: 'Coat', emoji: '🧥' },
+ { word: 'Socks', emoji: '🧦' },
+ { word: 'Gloves', emoji: '🧤' }
+ ]
+ },
+ {
+ id: 'weather',
+ name: 'Weather',
+ emoji: '🌤️',
+ color: '#3498DB',
+ words: [
+ { word: 'Sunny', emoji: '☀️' },
+ { word: 'Rainy', emoji: '🌧️' },
+ { word: 'Cloudy', emoji: '☁️' },
+ { word: 'Snowy', emoji: '❄️' },
+ { word: 'Windy', emoji: '💨' },
+ { word: 'Stormy', emoji: '⛈️' },
+ { word: 'Rainbow', emoji: '🌈' },
+ { word: 'Hot', emoji: '🥵' }
+ ]
+ },
+ {
+ id: 'vehicles',
+ name: 'Vehicles',
+ emoji: '🚗',
+ color: '#27AE60',
+ words: [
+ { word: 'Car', emoji: '🚗' },
+ { word: 'Bus', emoji: '🚌' },
+ { word: 'Train', emoji: '🚂' },
+ { word: 'Plane', emoji: '✈️' },
+ { word: 'Boat', emoji: '🚤' },
+ { word: 'Bike', emoji: '🚲' },
+ { word: 'Truck', emoji: '🚛' },
+ { word: 'Helicopter', emoji: '🚁' }
+ ]
  }
  ];
  
  let synth = null;
  let voices = [];
+ let audioContext = null;
  
  onMount(() => {
  if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -145,7 +217,51 @@
  // Load saved score
  const savedScore = localStorage.getItem('volta-kids-score');
  if (savedScore) score = parseInt(savedScore);
+ 
+ // Load saved progress
+ const savedProgress = localStorage.getItem('volta-kids-progress');
+ if (savedProgress) categoryProgress = JSON.parse(savedProgress);
  });
+ 
+ // Sound effects using Web Audio API
+ function playSound(type) {
+ if (!audioContext) {
+ audioContext = new (window.AudioContext || window.webkitAudioContext)();
+ }
+ 
+ const oscillator = audioContext.createOscillator();
+ const gainNode = audioContext.createGain();
+ 
+ oscillator.connect(gainNode);
+ gainNode.connect(audioContext.destination);
+ 
+ if (type === 'correct') {
+ // Happy ascending notes
+ oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+ oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+ oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+ gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+ gainNode.gain.exponentialDecayTo && gainNode.gain.exponentialDecayTo(0.01, audioContext.currentTime + 0.4);
+ } else if (type === 'wrong') {
+ // Sad descending buzz
+ oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+ oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.15);
+ gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+ } else if (type === 'celebrate') {
+ // Fanfare
+ oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+ oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+ oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
+ oscillator.frequency.setValueAtTime(1046.50, audioContext.currentTime + 0.3);
+ gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+ }
+ 
+ gainNode.gain.setValueAtTime(gainNode.gain.value, audioContext.currentTime + 0.3);
+ gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+ 
+ oscillator.start(audioContext.currentTime);
+ oscillator.stop(audioContext.currentTime + 0.5);
+ }
  
  function speak(text) {
  if (!synth) return;
@@ -158,11 +274,52 @@
  synth.speak(utterance);
  }
  
- function celebrate() {
+ function celebrate(type = 'correct') {
+ celebrationType = type;
  showCelebration = true;
+ if (type === 'celebrate') {
+ playSound('celebrate');
+ } else {
+ playSound('correct');
+ }
  score += 5;
  localStorage.setItem('volta-kids-score', score);
  setTimeout(() => { showCelebration = false; }, 2000);
+ }
+ 
+ function saveProgress(categoryId, activity, correct, total) {
+ if (!categoryProgress[categoryId]) {
+ categoryProgress[categoryId] = { flashcards: false, matching: false, quiz: 0, tracing: false };
+ }
+ 
+ if (activity === 'flashcards') {
+ categoryProgress[categoryId].flashcards = true;
+ } else if (activity === 'matching') {
+ categoryProgress[categoryId].matching = true;
+ } else if (activity === 'quiz') {
+ const prev = categoryProgress[categoryId].quiz || 0;
+ categoryProgress[categoryId].quiz = Math.max(prev, Math.round((correct / total) * 100));
+ } else if (activity === 'tracing') {
+ categoryProgress[categoryId].tracing = true;
+ }
+ 
+ localStorage.setItem('volta-kids-progress', JSON.stringify(categoryProgress));
+ }
+ 
+ function getProgressPercent(cat) {
+ const progress = categoryProgress[cat.id];
+ if (!progress) return 0;
+ let total = 0;
+ let completed = 0;
+ if (progress.flashcards) completed++;
+ total++;
+ if (progress.matching) completed++;
+ total++;
+ if (progress.quiz >= 80) completed++;
+ total++;
+ if (progress.tracing) completed++;
+ total++;
+ return Math.round((completed / total) * 100);
  }
  
  function nextItem() {
@@ -198,14 +355,12 @@
  function startMatching() {
  if (!currentCategory) return;
  
- // Create pairs: word cards and emoji cards
  const cards = [];
  currentCategory.words.slice(0, 6).forEach((w, i) => {
  cards.push({ id: i, type: 'word', content: w.word, pairId: i });
  cards.push({ id: i + 100, type: 'emoji', content: w.emoji, pairId: i });
  });
  
- // Shuffle
  matchCards = cards.sort(() => Math.random() - 0.5);
  matchedPairs = [];
  selectedCard = null;
@@ -221,20 +376,101 @@
  speak(card.type === 'word' ? card.content : currentCategory.words[card.pairId].word);
  } else {
  if (selectedCard.pairId === card.pairId && selectedCard.id !== card.id) {
- // Match!
  matchedPairs.push(selectedCard.id, card.id);
  matchedCount++;
- celebrate();
+ celebrate('correct');
  if (matchedCount === 6) {
+ saveProgress(currentCategory.id, 'matching', 6, 6);
  setTimeout(() => {
- alert('🎉 Amazing! You matched all the cards!');
+ celebrate('celebrate');
  }, 500);
  }
  } else {
- // No match - briefly show then flip back
+ playSound('wrong');
  speak('Try again!');
  }
  selectedCard = null;
+ }
+ }
+ 
+ // Quiz mode
+ let quizQuestions = $state([]);
+ let quizCurrent = $state(0);
+ let quizCorrect = $state(0);
+ let quizAnswer = $state(null);
+ 
+ function startQuiz() {
+ if (!currentCategory) return;
+ 
+ // Shuffle and pick 5 questions
+ const shuffled = [...currentCategory.words].sort(() => Math.random() - 0.5).slice(0, 5);
+ quizQuestions = shuffled.map(word => {
+ // Pick 3 wrong answers
+ const others = currentCategory.words.filter(w => w.word !== word.word);
+ const wrongAnswers = others.sort(() => Math.random() - 0.5).slice(0, 3);
+ const options = [word, ...wrongAnswers].sort(() => Math.random() - 0.5);
+ return { word, options, answered: false };
+ });
+ quizCurrent = 0;
+ quizCorrect = 0;
+ quizAnswer = null;
+ currentView = 'quiz';
+ }
+ 
+ function answerQuiz(option, questionIndex) {
+ if (quizQuestions[questionIndex].answered) return;
+ 
+ const isCorrect = option.word === quizQuestions[questionIndex].word.word;
+ quizQuestions[questionIndex].answered = true;
+ quizAnswer = isCorrect ? 'correct' : 'wrong';
+ 
+ if (isCorrect) {
+ quizCorrect++;
+ celebrate('correct');
+ } else {
+ playSound('wrong');
+ speak(`No, that's ${option.word}. The answer is ${quizQuestions[questionIndex].word.word}`);
+ }
+ 
+ setTimeout(() => {
+ if (quizCurrent < quizQuestions.length - 1) {
+ quizCurrent++;
+ quizAnswer = null;
+ } else {
+ // Quiz complete
+ saveProgress(currentCategory.id, 'quiz', quizCorrect, quizQuestions.length);
+ if (quizCorrect === quizQuestions.length) {
+ celebrate('celebrate');
+ }
+ }
+ }, 1500);
+ }
+ 
+ // Tracing mode
+ let traceWord = $state(null);
+ let tracePoints = $state([]);
+ let isDrawing = $state(false);
+ 
+ function startTracing() {
+ if (!currentCategory) return;
+ traceWord = currentCategory.words[0];
+ tracePoints = [];
+ currentView = 'tracing';
+ }
+ 
+ function nextTraceWord() {
+ const idx = currentCategory.words.findIndex(w => w.word === traceWord.word);
+ if (idx < currentCategory.words.length - 1) {
+ traceWord = currentCategory.words[idx + 1];
+ tracePoints = [];
+ }
+ }
+ 
+ function prevTraceWord() {
+ const idx = currentCategory.words.findIndex(w => w.word === traceWord.word);
+ if (idx > 0) {
+ traceWord = currentCategory.words[idx - 1];
+ tracePoints = [];
  }
  }
 </script>
@@ -243,7 +479,7 @@
  {#if showCelebration}
  <div class="celebration">
  <div class="confetti">🎉⭐🌟✨💫</div>
- <div class="celebrate-text">Great Job!</div>
+ <div class="celebrate-text">{celebrationType === 'celebrate' ? 'Amazing!' : 'Great Job!'}</div>
  </div>
  {/if}
  
@@ -272,6 +508,11 @@
  <span class="cat-emoji">{cat.emoji}</span>
  <span class="cat-name">{cat.name}</span>
  <span class="cat-count">{cat.words.length} words</span>
+ {#if getProgressPercent(cat) > 0}
+ <div class="progress-bar">
+ <div class="progress-fill" style="width: {getProgressPercent(cat)}%"></div>
+ </div>
+ {/if}
  </button>
  {/each}
  </div>
@@ -280,6 +521,11 @@
  {:else if currentView === 'flashcards'}
  <section class="flashcards">
  <button class="back-btn" onclick={goHome}>← Back</button>
+ 
+ <div class="category-title" style="background: {currentCategory.color}">
+ <span class="cat-emoji-large">{currentCategory.emoji}</span>
+ <span>{currentCategory.name}</span>
+ </div>
  
  <div class="card-container">
  <button class="nav-btn" onclick={prevItem} disabled={currentItem === 0}>
@@ -302,8 +548,14 @@
  </div>
  
  <div class="card-actions">
- <button class="action-btn play-btn" onclick={startMatching}>
- 🎴 Play Matching Game
+ <button class="action-btn matching-btn" onclick={startMatching}>
+ 🎴 Matching
+ </button>
+ <button class="action-btn quiz-btn" onclick={startQuiz}>
+ ❓ Quiz
+ </button>
+ <button class="action-btn trace-btn" onclick={startTracing}>
+ ✏️ Trace
  </button>
  </div>
  </section>
@@ -331,6 +583,82 @@
  
  <div class="match-progress">
  Matched: {matchedCount} / 6
+ </div>
+ </section>
+ 
+ {:else if currentView === 'quiz'}
+ <section class="quiz-game">
+ <button class="back-btn" onclick={() => { currentView = 'flashcards'; }}>← Back</button>
+ 
+ <div class="quiz-progress">
+ Question {quizCurrent + 1} of {quizQuestions.length}
+ <div class="quiz-score">Correct: {quizCorrect}</div>
+ </div>
+ 
+ {#if quizQuestions[quizCurrent]}
+ <div class="quiz-question">
+ <div class="quiz-emoji">{quizQuestions[quizCurrent].word.emoji}</div>
+ <div class="quiz-prompt">What is this?</div>
+ </div>
+ 
+ <div class="quiz-options">
+ {#each quizQuestions[quizCurrent].options as opt}
+ <button 
+ class="quiz-option {quizQuestions[quizCurrent].answered ? (opt.word === quizQuestions[quizCurrent].word.word ? 'correct' : 'wrong') : ''}"
+ onclick={() => answerQuiz(opt, quizCurrent)}
+ disabled={quizQuestions[quizCurrent].answered}>
+ {opt.word}
+ </button>
+ {/each}
+ </div>
+ 
+ {#if quizAnswer === 'correct'}
+ <div class="quiz-feedback correct">✓ Correct! 🎉</div>
+ {:else if quizAnswer === 'wrong'}
+ <div class="quiz-feedback wrong">✗ Try again!</div>
+ {/if}
+ {/if}
+ 
+ {#if quizCurrent >= quizQuestions.length - 1 && quizQuestions[quizCurrent]?.answered}
+ <div class="quiz-complete">
+ <h3>Quiz Complete!</h3>
+ <p>You got {quizCorrect} out of {quizQuestions.length} correct!</p>
+ <button class="action-btn" onclick={() => { currentView = 'flashcards'; }}>Done</button>
+ </div>
+ {/if}
+ </section>
+ 
+ {:else if currentView === 'tracing'}
+ <section class="tracing-game">
+ <button class="back-btn" onclick={() => { currentView = 'flashcards'; }}>← Back</button>
+ 
+ <div class="tracing-container">
+ <div class="tracing-header">
+ <button class="nav-btn small" onclick={prevTraceWord} disabled={currentCategory.words.indexOf(traceWord) === 0}>◀</button>
+ <div class="trace-word-display">
+ <span class="trace-emoji">{traceWord.emoji}</span>
+ <span class="trace-word">{traceWord.word}</span>
+ </div>
+ <button class="nav-btn small" onclick={nextTraceWord} disabled={currentCategory.words.indexOf(traceWord) === currentCategory.words.length - 1}>▶</button>
+ </div>
+ 
+ <div class="tracing-canvas">
+ <div class="trace-guide">
+ {#each traceWord.word.split('') as letter, i}
+ <span class="trace-letter">{letter}</span>
+ {/each}
+ </div>
+ <div class="trace-instruction">
+ ✏️ Practice writing: {traceWord.word}
+ </div>
+ <div class="trace-practice">
+ <input type="text" class="trace-input" placeholder="Type the word..." />
+ </div>
+ </div>
+ 
+ <button class="action-btn speak-btn" onclick={() => speak(traceWord.word)}>
+ 🔊 Hear it
+ </button>
  </div>
  </section>
  {/if}
@@ -449,6 +777,7 @@
  transition: transform 0.2s, box-shadow 0.2s;
  font-family: inherit;
  border-bottom: 5px solid var(--cat-color);
+ position: relative;
  }
  
  .category-btn:hover {
@@ -475,11 +804,44 @@
  color: #888;
  }
  
+ .progress-bar {
+ width: 80%;
+ height: 8px;
+ background: #eee;
+ border-radius: 4px;
+ overflow: hidden;
+ margin-top: 0.5rem;
+ }
+ 
+ .progress-fill {
+ height: 100%;
+ background: linear-gradient(90deg, #4CAF50, #8BC34A);
+ transition: width 0.3s;
+ }
+ 
  /* Flashcards */
  .flashcards {
  flex: 1;
  display: flex;
  flex-direction: column;
+ }
+ 
+ .category-title {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 0.5rem;
+ padding: 1rem;
+ border-radius: 15px;
+ color: white;
+ font-size: 1.5rem;
+ font-weight: bold;
+ margin-bottom: 1rem;
+ text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+ }
+ 
+ .cat-emoji-large {
+ font-size: 2rem;
  }
  
  .back-btn {
@@ -513,6 +875,12 @@
  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
  font-family: inherit;
  transition: transform 0.2s;
+ }
+ 
+ .nav-btn.small {
+ width: 40px;
+ height: 40px;
+ font-size: 1rem;
  }
  
  .nav-btn:hover:not(:disabled) {
@@ -568,12 +936,13 @@
  .card-actions {
  display: flex;
  justify-content: center;
- gap: 1rem;
+ flex-wrap: wrap;
+ gap: 0.75rem;
  margin-top: 1.5rem;
  }
  
  .action-btn {
- padding: 1rem 2rem;
+ padding: 1rem 1.5rem;
  border: none;
  border-radius: 20px;
  font-size: 1.1rem;
@@ -588,8 +957,18 @@
  transform: scale(1.05);
  }
  
- .play-btn {
+ .matching-btn {
  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+ color: white;
+ }
+ 
+ .quiz-btn {
+ background: linear-gradient(135deg, #9B59B6, #8E44AD);
+ color: white;
+ }
+ 
+ .trace-btn {
+ background: linear-gradient(135deg, #E74C3C, #C0392B);
  color: white;
  }
  
@@ -652,6 +1031,209 @@
  font-weight: bold;
  }
  
+ /* Quiz Game */
+ .quiz-game {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ }
+ 
+ .quiz-progress {
+ color: white;
+ font-size: 1.25rem;
+ margin-bottom: 1.5rem;
+ text-align: center;
+ }
+ 
+ .quiz-score {
+ background: rgba(255,255,255,0.2);
+ padding: 0.5rem 1rem;
+ border-radius: 10px;
+ margin-top: 0.5rem;
+ }
+ 
+ .quiz-question {
+ background: white;
+ border-radius: 30px;
+ padding: 2rem;
+ text-align: center;
+ margin-bottom: 1.5rem;
+ box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+ }
+ 
+ .quiz-emoji {
+ font-size: 6rem;
+ margin-bottom: 1rem;
+ }
+ 
+ .quiz-prompt {
+ font-size: 1.5rem;
+ color: #333;
+ font-weight: bold;
+ }
+ 
+ .quiz-options {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 1rem;
+ max-width: 400px;
+ }
+ 
+ .quiz-option {
+ padding: 1.5rem;
+ background: white;
+ border: none;
+ border-radius: 15px;
+ font-size: 1.5rem;
+ cursor: pointer;
+ font-family: inherit;
+ font-weight: bold;
+ box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+ transition: transform 0.2s;
+ }
+ 
+ .quiz-option:hover:not(:disabled) {
+ transform: scale(1.05);
+ }
+ 
+ .quiz-option.correct {
+ background: #A8E6CF;
+ }
+ 
+ .quiz-option.wrong {
+ background: #FF6B6B;
+ color: white;
+ }
+ 
+ .quiz-feedback {
+ font-size: 1.5rem;
+ font-weight: bold;
+ padding: 1rem 2rem;
+ border-radius: 15px;
+ margin-top: 1rem;
+ }
+ 
+ .quiz-feedback.correct {
+ background: #A8E6CF;
+ color: #2E7D32;
+ }
+ 
+ .quiz-feedback.wrong {
+ background: #FFCDD2;
+ color: #C62828;
+ }
+ 
+ .quiz-complete {
+ background: white;
+ border-radius: 30px;
+ padding: 2rem;
+ text-align: center;
+ margin-top: 1rem;
+ }
+ 
+ .quiz-complete h3 {
+ font-size: 2rem;
+ color: #333;
+ margin-bottom: 1rem;
+ }
+ 
+ .quiz-complete p {
+ font-size: 1.25rem;
+ color: #666;
+ margin-bottom: 1rem;
+ }
+ 
+ /* Tracing */
+ .tracing-game {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ }
+ 
+ .tracing-container {
+ background: white;
+ border-radius: 30px;
+ padding: 2rem;
+ text-align: center;
+ box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+ }
+ 
+ .tracing-header {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 1.5rem;
+ margin-bottom: 2rem;
+ }
+ 
+ .trace-word-display {
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+ }
+ 
+ .trace-emoji {
+ font-size: 4rem;
+ }
+ 
+ .trace-word {
+ font-size: 3rem;
+ font-weight: bold;
+ color: #333;
+ }
+ 
+ .tracing-canvas {
+ background: #f5f5f5;
+ border-radius: 20px;
+ padding: 2rem;
+ margin-bottom: 1.5rem;
+ }
+ 
+ .trace-guide {
+ font-size: 4rem;
+ letter-spacing: 0.5rem;
+ color: #ddd;
+ margin-bottom: 1rem;
+ }
+ 
+ .trace-letter {
+ display: inline-block;
+ }
+ 
+ .trace-instruction {
+ font-size: 1.25rem;
+ color: #666;
+ margin-bottom: 1rem;
+ }
+ 
+ .trace-practice {
+ display: flex;
+ justify-content: center;
+ }
+ 
+ .trace-input {
+ font-size: 2rem;
+ padding: 1rem;
+ border: 3px dashed #ccc;
+ border-radius: 15px;
+ text-align: center;
+ width: 80%;
+ max-width: 300px;
+ font-family: inherit;
+ }
+ 
+ .trace-input:focus {
+ outline: none;
+ border-color: #4ECDC4;
+ }
+ 
+ .speak-btn {
+ background: linear-gradient(135deg, #3498DB, #2980B9);
+ color: white;
+ margin-top: 1rem;
+ }
+ 
  /* Celebration */
  .celebration {
  position: fixed;
@@ -711,11 +1293,11 @@
  font-size: 2rem;
  }
  
- .card-emoji {
+ .card-emoji, .quiz-emoji {
  font-size: 5rem;
  }
  
- .card-word {
+ .card-word, .trace-word {
  font-size: 2.5rem;
  }
  
@@ -725,6 +1307,10 @@
  
  .match-card {
  font-size: 1.5rem;
+ }
+ 
+ .quiz-options {
+ grid-template-columns: 1fr;
  }
  }
 </style>
