@@ -458,6 +458,255 @@
  currentView = 'tracing';
  }
  
+ // Reading section - Mother Goose Nursery Rhymes
+ const nurseryRhymes = [
+ {
+ id: 'jack-jill',
+ title: 'Jack and Jill',
+ emoji: '🏔️',
+ text: `Jack and Jill went up the hill
+To fetch a pail of water;
+Jack fell down and broke his crown,
+And Jill came tumbling after.`,
+ illustration: '🧒‍👦💧'
+ },
+ {
+ id: 'little-bo-peep',
+ title: 'Little Bo-Peep',
+ emoji: '🐑',
+ text: `Little Bo-Peep has lost her sheep,
+And doesn't know where to find them;
+Leave them alone, and they'll come home,
+Wagging their tails behind them.`,
+ illustration: '👧🐑'
+ },
+ {
+ id: 'humpty-dumpty',
+ title: 'Humpty Dumpty',
+ emoji: '🥚',
+ text: `Humpty Dumpty sat on a wall,
+Humpty Dumpty had a great fall;
+All the King's horses and all the King's men,
+Couldn't put Humpty together again.`,
+ illustration: '🥚🏰👑'
+ },
+ {
+ id: 'little-miss-muffet',
+ title: 'Little Miss Muffet',
+ emoji: '🕷️',
+ text: `Little Miss Muffet sat on a tuffet,
+Eating her curds and whey;
+Along came a spider, who sat down beside her,
+And frightened Miss Muffet away.`,
+ illustration: '👧🥛🕷️'
+ },
+ {
+ id: 'baa-baa-sheep',
+ title: 'Baa, Baa, Black Sheep',
+ emoji: '🐑',
+ text: `Baa, baa, black sheep,
+Have you any wool?
+Yes, sir, yes, sir,
+Three bags full;
+One for the master,
+One for the dame,
+And one for the little boy
+Who lives down the lane.`,
+ illustration: '🐑🧶'
+ },
+ {
+ id: 'twinkle-star',
+ title: 'Twinkle, Twinkle, Little Star',
+ emoji: '⭐',
+ text: `Twinkle, twinkle, little star,
+How I wonder what you are!
+Up above the world so high,
+Like a diamond in the sky.`,
+ illustration: '✨🌟💎'
+ },
+ {
+ id: 'mary-lamb',
+ title: 'Mary Had a Little Lamb',
+ emoji: '🐑',
+ text: `Mary had a little lamb,
+Its fleece was white as snow;
+And everywhere that Mary went,
+The lamb was sure to go.`,
+ illustration: '👧🐑❄️'
+ },
+ {
+ id: 'hickory-dickory',
+ title: 'Hickory Dickory Dock',
+ emoji: '🐭',
+ text: `Hickory, dickory, dock,
+The mouse ran up the clock;
+The clock struck one,
+The mouse ran down,
+Hickory, dickory, dock.`,
+ illustration: '🐭🕐'
+ },
+ {
+ id: 'hey-diddle',
+ title: 'Hey Diddle Diddle',
+ emoji: '🐱',
+ text: `Hey diddle diddle,
+The cat and the fiddle,
+The cow jumped over the moon;
+The little dog laughed
+To see such sport,
+And the dish ran away with the spoon.`,
+ illustration: '🐱🎻🐄🌙'
+ },
+ {
+ id: 'london-bridge',
+ title: 'London Bridge',
+ emoji: '🌉',
+ text: `London Bridge is falling down,
+Falling down, falling down;
+London Bridge is falling down,
+My fair lady.`,
+ illustration: '🌉👑'
+ },
+ {
+ id: 'row-boat',
+ title: 'Row, Row, Row Your Boat',
+ emoji: '🚣',
+ text: `Row, row, row your boat,
+Gently down the stream;
+Merrily, merrily, merrily, merrily,
+Life is but a dream.`,
+ illustration: '🚣🌊'
+ },
+ {
+ id: 'old-mcdonald',
+ title: 'Old McDonald Had a Farm',
+ emoji: '🚜',
+ text: `Old McDonald had a farm,
+E-I-E-I-O!
+And on his farm he had a cow,
+E-I-E-I-O!
+With a moo-moo here,
+And a moo-moo there,
+Here a moo, there a moo,
+Everywhere a moo-moo!`,
+ illustration: '🚜🐄🐷🐔'
+ },
+ {
+ id: 'itsy-bitsy',
+ title: 'Itsy Bitsy Spider',
+ emoji: '🕷️',
+ text: `The itsy bitsy spider
+Climbed up the water spout;
+Down came the rain
+And washed the spider out;
+Out came the sun
+And dried up all the rain;
+And the itsy bitsy spider
+Climbed up the spout again.`,
+ illustration: '🕷️🌧️☀️'
+ },
+ {
+ id: 'mary-garden',
+ title: 'Mary, Mary, Quite Contrary',
+ emoji: '🌷',
+ text: `Mary, Mary, quite contrary,
+How does your garden grow?
+With silver bells and cockle shells,
+And pretty maids all in a row.`,
+ illustration: '👧🌷🌸'
+ },
+ {
+ id: 'jack-horner',
+ title: 'Little Jack Horner',
+ emoji: '🥧',
+ text: `Little Jack Horner
+Sat in a corner,
+Eating a Christmas pie;
+He put in his thumb,
+And pulled out a plum,
+And said, "What a good boy am I!"`,
+ illustration: '👦🥧'
+ },
+ {
+ id: 'jack-sprat',
+ title: 'Jack Sprat',
+ emoji: '🍽️',
+ text: `Jack Sprat could eat no fat,
+His wife could eat no lean;
+And so between them both, you see,
+They licked the platter clean.`,
+ illustration: '👨‍👩🍽️'
+ },
+ {
+ id: 'polly-kettle',
+ title: 'Polly Put the Kettle On',
+ emoji: '☕',
+ text: `Polly put the kettle on,
+Polly put the kettle on,
+Polly put the kettle on,
+We'll all have tea.`,
+ illustration: '👧☕🍰'
+ },
+ {
+ id: 'rain-rain',
+ title: 'Rain, Rain, Go Away',
+ emoji: '🌧️',
+ text: `Rain, rain, go away,
+Come again another day;
+Little Johnny wants to play.`,
+ illustration: '🌧️👦☀️'
+ },
+ {
+ id: 'star-light',
+ title: 'Star Light, Star Bright',
+ emoji: '🌟',
+ text: `Star light, star bright,
+First star I see tonight;
+I wish I may, I wish I might,
+Have the wish I wish tonight.`,
+ illustration: '🌟🌙✨'
+ },
+ {
+ id: 'little-jump',
+ title: 'One, Two, Buckle My Shoe',
+ emoji: '👟',
+ text: `One, two, buckle my shoe;
+Three, four, knock at the door;
+Five, six, pick up sticks;
+Seven, eight, lay them straight;
+Nine, ten, a big fat hen!`,
+ illustration: '👟🚪🪵🐔'
+ }
+ ];
+ 
+ let currentRhyme = $state(null);
+ let rhymeIndex = $state(0);
+ 
+ function openReading() {
+ currentRhyme = nurseryRhymes[0];
+ rhymeIndex = 0;
+ currentView = 'reading';
+ }
+ 
+ function nextRhyme() {
+ if (rhymeIndex < nurseryRhymes.length - 1) {
+ rhymeIndex++;
+ currentRhyme = nurseryRhymes[rhymeIndex];
+ }
+ }
+ 
+ function prevRhyme() {
+ if (rhymeIndex > 0) {
+ rhymeIndex--;
+ currentRhyme = nurseryRhymes[rhymeIndex];
+ }
+ }
+ 
+ function selectRhyme(idx) {
+ rhymeIndex = idx;
+ currentRhyme = nurseryRhymes[idx];
+ }
+ 
  function nextTraceWord() {
  const idx = currentCategory.words.findIndex(w => w.word === traceWord.word);
  if (idx < currentCategory.words.length - 1) {
@@ -515,6 +764,14 @@
  {/if}
  </button>
  {/each}
+ </div>
+ 
+ <div class="reading-section">
+ <button class="reading-btn" onclick={openReading}>
+ <span class="reading-emoji">📖</span>
+ <span class="reading-title">Reading</span>
+ <span class="reading-subtitle">Nursery Rhymes</span>
+ </button>
  </div>
  </section>
  
@@ -659,6 +916,49 @@
  <button class="action-btn speak-btn" onclick={() => speak(traceWord.word)}>
  🔊 Hear it
  </button>
+ </div>
+ </section>
+ 
+ {:else if currentView === 'reading'}
+ <section class="reading-view">
+ <button class="back-btn" onclick={goHome}>← Back</button>
+ 
+ <div class="rhyme-nav">
+ <button class="nav-btn" onclick={prevRhyme} disabled={rhymeIndex === 0}>◀</button>
+ <div class="rhyme-counter">{rhymeIndex + 1} / {nurseryRhymes.length}</div>
+ <button class="nav-btn" onclick={nextRhyme} disabled={rhymeIndex === nurseryRhymes.length - 1}>▶</button>
+ </div>
+ 
+ <div class="rhyme-card">
+ <div class="rhyme-header">
+ <span class="rhyme-emoji">{currentRhyme.emoji}</span>
+ <h2>{currentRhyme.title}</h2>
+ </div>
+ 
+ <div class="rhyme-illustration">{currentRhyme.illustration}</div>
+ 
+ <div class="rhyme-text">
+ {#each currentRhyme.text.split('\n') as line}
+ <p>{line}</p>
+ {/each}
+ </div>
+ 
+ <div class="rhyme-actions">
+ <button class="action-btn speak-btn" onclick={() => speak(currentRhyme.text)}>
+ 🔊 Read Aloud
+ </button>
+ </div>
+ </div>
+ 
+ <div class="rhyme-list">
+ {#each nurseryRhymes as rhyme, idx}
+ <button 
+ class="rhyme-thumb {idx === rhymeIndex ? 'active' : ''}"
+ onclick={() => selectRhyme(idx)}>
+ <span class="thumb-emoji">{rhyme.emoji}</span>
+ <span class="thumb-title">{rhyme.title}</span>
+ </button>
+ {/each}
  </div>
  </section>
  {/if}
@@ -1312,5 +1612,172 @@
  .quiz-options {
  grid-template-columns: 1fr;
  }
+ }
+ 
+ /* Reading Section */
+ .reading-section {
+ margin-top: 2rem;
+ display: flex;
+ justify-content: center;
+ }
+ 
+ .reading-btn {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 0.5rem;
+ padding: 2rem 3rem;
+ background: linear-gradient(135deg, #FF6B6B, #FFA07A);
+ border: none;
+ border-radius: 25px;
+ cursor: pointer;
+ box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+ transition: transform 0.2s, box-shadow 0.2s;
+ font-family: inherit;
+ }
+ 
+ .reading-btn:hover {
+ transform: translateY(-5px) scale(1.02);
+ box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+ }
+ 
+ .reading-emoji {
+ font-size: 4rem;
+ }
+ 
+ .reading-title {
+ font-size: 1.75rem;
+ font-weight: bold;
+ color: white;
+ text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+ }
+ 
+ .reading-subtitle {
+ font-size: 1rem;
+ color: rgba(255,255,255,0.9);
+ }
+ 
+ .reading-view {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding-bottom: 1rem;
+ }
+ 
+ .rhyme-nav {
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+ margin-bottom: 1.5rem;
+ }
+ 
+ .rhyme-counter {
+ color: white;
+ font-size: 1.25rem;
+ font-weight: bold;
+ background: rgba(255,255,255,0.2);
+ padding: 0.5rem 1rem;
+ border-radius: 10px;
+ }
+ 
+ .rhyme-card {
+ background: white;
+ border-radius: 30px;
+ padding: 2rem;
+ width: 100%;
+ max-width: 600px;
+ box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+ margin-bottom: 1.5rem;
+ }
+ 
+ .rhyme-header {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 1rem;
+ margin-bottom: 1.5rem;
+ }
+ 
+ .rhyme-emoji {
+ font-size: 3rem;
+ }
+ 
+ .rhyme-header h2 {
+ font-size: 2rem;
+ color: #333;
+ margin: 0;
+ }
+ 
+ .rhyme-illustration {
+ text-align: center;
+ font-size: 4rem;
+ margin-bottom: 1.5rem;
+ padding: 1rem;
+ background: linear-gradient(135deg, #FFE66D, #FFA500);
+ border-radius: 20px;
+ }
+ 
+ .rhyme-text {
+ text-align: center;
+ font-size: 1.5rem;
+ line-height: 2;
+ color: #333;
+ }
+ 
+ .rhyme-text p {
+ margin: 0.75rem 0;
+ }
+ 
+ .rhyme-actions {
+ display: flex;
+ justify-content: center;
+ margin-top: 1.5rem;
+ }
+ 
+ .rhyme-list {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ gap: 0.5rem;
+ max-width: 800px;
+ }
+ 
+ .rhyme-thumb {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 0.25rem;
+ padding: 0.5rem 0.75rem;
+ background: rgba(255,255,255,0.9);
+ border: none;
+ border-radius: 15px;
+ cursor: pointer;
+ font-family: inherit;
+ transition: transform 0.2s, background 0.2s;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+ }
+ 
+ .rhyme-thumb:hover {
+ transform: scale(1.05);
+ }
+ 
+ .rhyme-thumb.active {
+ background: linear-gradient(135deg, #4ECDC4, #44A08D);
+ }
+ 
+ .rhyme-thumb.active .thumb-title {
+ color: white;
+ }
+ 
+ .thumb-emoji {
+ font-size: 1.5rem;
+ }
+ 
+ .thumb-title {
+ font-size: 0.75rem;
+ color: #666;
+ font-weight: bold;
+ white-space: nowrap;
  }
 </style>
