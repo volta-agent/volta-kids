@@ -474,8 +474,36 @@
  currentView = 'tracing';
  }
  
- // Reading section - Mother Goose Nursery Rhymes
- const nurseryRhymes = [
+// Ladder to Learning - ABC Rhymes (1852)
+const ladderToLearning = [
+{ id: 'A', letter: 'A', text: 'A stands for Ape, for Arthur, and Air.' },
+{ id: 'B', letter: 'B', text: 'B stands for Bullock, for Bird, and for Bear.' },
+{ id: 'C', letter: 'C', text: 'C stands for Cat, for Charles, and for cry.' },
+{ id: 'D', letter: 'D', text: 'D stands for Dog, for Daniel, and Dry.' },
+{ id: 'E', letter: 'E', text: 'E stands for Eagle, for Edward, and Eel.' },
+{ id: 'F', letter: 'F', text: 'F stands for Fish, for Francis, and Feel.' },
+{ id: 'G', letter: 'G', text: 'G stands for Goat, for Great, and for Good.' },
+{ id: 'H', letter: 'H', text: 'H stands for Hog, for Harry, and Hood.' },
+{ id: 'J', letter: 'J', text: 'J stands for Judge, for Jack, and for Jill.' },
+{ id: 'K', letter: 'K', text: 'K stands for King, for Kate, and for Kill.' },
+{ id: 'L', letter: 'L', text: 'L stands for Lion, for Lawyer, and Land.' },
+{ id: 'M', letter: 'M', text: 'M stands for Magpie, for Martha, and Mend.' },
+{ id: 'N', letter: 'N', text: 'N stands for Nag, for Nanny, and Notes.' },
+{ id: 'O', letter: 'O', text: 'O stands for Owl, for Orchard, and Oats.' },
+{ id: 'P', letter: 'P', text: 'P stands for Peacock, for Prince, and for Pay.' },
+{ id: 'Q', letter: 'Q', text: 'Q stands for Queen, for Quick, and for Quay.' },
+{ id: 'R', letter: 'R', text: 'R stands for Robin, for Reason, and Rhyme.' },
+{ id: 'S', letter: 'S', text: 'S stands for Squirrel, for Sweet, and Sublime.' },
+{ id: 'T', letter: 'T', text: 'T stands for Top, for Tea, and for Towel.' },
+{ id: 'V', letter: 'V', text: 'V stands for Vine, for Virtue, and Vowel.' },
+{ id: 'W', letter: 'W', text: 'W stands for Whale, for Waggon, and Wing.' },
+{ id: 'X', letter: 'X', text: 'X stands for Xerxes, the great Persian King.' },
+{ id: 'Y', letter: 'Y', text: 'Y stands for Yew Tree, for Youth, and for Yellow.' },
+{ id: 'Z', letter: 'Z', text: 'Z stands for Zany, a foolish Young Fellow.' }
+];
+
+// Reading section - Mother Goose Nursery Rhymes
+const nurseryRhymes = [
  {
  id: 'jack-jill',
  title: 'Jack and Jill',
@@ -942,12 +970,21 @@ let currentRhyme = $state(null);
 let rhymeIndex = $state(0);
 let currentFable = $state(null);
 let fableIndex = $state(0);
-let readingType = $state('nursery'); // 'nursery' or 'aesop'
+let readingType = $state('nursery'); // 'nursery', 'aesop', or 'ladder'
+let currentLadder = $state(null);
+let ladderIndex = $state(0);
 
 function openReading() {
 currentRhyme = nurseryRhymes[0];
 rhymeIndex = 0;
 readingType = 'nursery';
+currentView = 'reading';
+}
+
+function openLadder() {
+currentLadder = ladderToLearning[0];
+ladderIndex = 0;
+readingType = 'ladder';
 currentView = 'reading';
 }
 
@@ -994,6 +1031,37 @@ currentFable = aesopFables[fableIndex];
 function selectFable(idx) {
 fableIndex = idx;
 currentFable = aesopFables[idx];
+}
+
+function nextLadder() {
+if (ladderIndex < ladderToLearning.length - 1) {
+ladderIndex++;
+currentLadder = ladderToLearning[ladderIndex];
+}
+}
+
+function prevLadder() {
+if (ladderIndex > 0) {
+ladderIndex--;
+currentLadder = ladderToLearning[ladderIndex];
+}
+}
+
+function selectLadder(idx) {
+ladderIndex = idx;
+currentLadder = ladderToLearning[idx];
+}
+
+function speakLadder() {
+if (currentLadder && synth) {
+synth.cancel();
+const utterance = new SpeechSynthesisUtterance(currentLadder.text);
+utterance.lang = 'en-US';
+utterance.rate = 0.8;
+const voice = voices.find(v => v.lang.includes('en'));
+if (voice) utterance.voice = voice;
+synth.speak(utterance);
+}
 }
 
 function speakFable() {
@@ -1068,10 +1136,15 @@ function nextTraceWord() {
  </div>
  
 <div class="reading-section">
+<button class="reading-btn" onclick={openLadder}>
+<span class="reading-emoji">🪜</span>
+<span class="reading-title">Ladder to Learning</span>
+<span class="reading-subtitle">ABC Rhymes</span>
+</button>
 <button class="reading-btn" onclick={openReading}>
 <span class="reading-emoji">📖</span>
-<span class="reading-title">Reading</span>
-<span class="reading-subtitle">Nursery Rhymes</span>
+<span class="reading-title">Nursery Rhymes</span>
+<span class="reading-subtitle">20 Classic Rhymes</span>
 </button>
 <button class="reading-btn aesop-btn" onclick={openAesop}>
 <span class="reading-emoji">🦊</span>
@@ -1306,6 +1379,33 @@ class="rhyme-thumb {idx === fableIndex ? 'active' : ''}"
 onclick={() => selectFable(idx)}>
 <span class="thumb-emoji">{fable.emoji}</span>
 <span class="thumb-title">{fable.title}</span>
+</button>
+{/each}
+</div>
+{:else if readingType === 'ladder'}
+<div class="rhyme-nav">
+<button class="nav-btn" onclick={prevLadder} disabled={ladderIndex === 0}>◀</button>
+<div class="rhyme-counter">{ladderIndex + 1} / {ladderToLearning.length}</div>
+<button class="nav-btn" onclick={nextLadder} disabled={ladderIndex === ladderToLearning.length - 1}>▶</button>
+</div>
+
+<div class="rhyme-card ladder-card">
+<div class="ladder-letter">{currentLadder.letter}</div>
+<div class="ladder-text">{currentLadder.text}</div>
+
+<div class="rhyme-actions">
+<button class="action-btn speak-btn" onclick={speakLadder}>
+🔊 Read Aloud
+</button>
+</div>
+</div>
+
+<div class="ladder-grid">
+{#each ladderToLearning as item, idx}
+<button 
+class="ladder-thumb {idx === ladderIndex ? 'active' : ''}"
+onclick={() => selectLadder(idx)}>
+<span class="ladder-thumb-letter">{item.letter}</span>
 </button>
 {/each}
 </div>
@@ -2155,5 +2255,67 @@ text-align: center;
 
 .fable-moral strong {
 color: #FFE66D;
+}
+
+/* Ladder to Learning styles */
+.ladder-card {
+background: linear-gradient(135deg, #9B59B6, #8E44AD);
+}
+
+.ladder-letter {
+font-size: 8rem;
+font-weight: bold;
+text-align: center;
+color: white;
+text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+line-height: 1;
+margin-bottom: 1rem;
+}
+
+.ladder-text {
+text-align: center;
+font-size: 1.5rem;
+line-height: 1.6;
+color: white;
+padding: 1rem;
+}
+
+.ladder-grid {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 0.5rem;
+max-width: 800px;
+margin-top: 1.5rem;
+}
+
+.ladder-thumb {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 3rem;
+height: 3rem;
+background: rgba(255,255,255,0.9);
+border: none;
+border-radius: 12px;
+cursor: pointer;
+font-family: inherit;
+font-size: 1.5rem;
+font-weight: bold;
+transition: transform 0.2s, background 0.2s;
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.ladder-thumb:hover {
+transform: scale(1.1);
+}
+
+.ladder-thumb.active {
+background: linear-gradient(135deg, #9B59B6, #8E44AD);
+color: white;
+}
+
+.ladder-thumb-letter {
+font-size: 1.5rem;
 }
 </style>
